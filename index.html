@@ -73,25 +73,51 @@ Estate atento. Esta página podrá utilizarse también para futuras acciones de 
 <div class="footer">Prototipo demostrativo · No contiene datos reales · OAP</div>
 </div>
 <script>
-// Coloca aquí la URL real de Microsoft Forms cuando esté disponible.
 const FORMULARIO_URL = "";
 
-function ocultar(){['ok','pending','error'].forEach(id=>document.getElementById(id).style.display='none')}
-function consultar(){
+// Consulta la lista de DNI registrados en estado.json
+async function consultar(){
   ocultar();
-  const dni=document.getElementById('dni').value.trim();
-  if(!/^\d{8}$/.test(dni)){document.getElementById('error').style.display='block';return}
-  // DEMO: pares = misión cumplida; impares = misión pendiente.
-  // En la versión institucional esta lógica será reemplazada por una consulta real.
-  const ultimo=parseInt(dni.slice(-1),10);
-  if(ultimo%2===0) document.getElementById('ok').style.display='block';
-  else document.getElementById('pending').style.display='block';
+
+  const dni = document.getElementById('dni').value.trim();
+
+  if(!/^\d{8}$/.test(dni)){
+    document.getElementById('error').style.display='block';
+    return;
+  }
+
+  try {
+    const respuesta = await fetch('estado.json');
+    const estados = await respuesta.json();
+
+    if(estados[dni] === "COMPLETADO"){
+      document.getElementById('ok').style.display='block';
+    } else {
+      document.getElementById('pending').style.display='block';
+    }
+
+  } catch(error) {
+    console.error(error);
+    document.getElementById('error').style.display='block';
+  }
 }
+
+function ocultar(){
+  ['ok','pending','error'].forEach(id =>
+    document.getElementById(id).style.display='none'
+  );
+}
+
 function abrirFormulario(){
-  if(FORMULARIO_URL) window.open(FORMULARIO_URL,'_blank');
-  else alert('Aquí se abrirá el formulario institucional de actualización de datos.\n\nPara publicarlo, reemplaza FORMULARIO_URL en el código por el enlace de Microsoft Forms.');
+  if(FORMULARIO_URL)
+    window.open(FORMULARIO_URL,'_blank');
+  else
+    alert('Aquí se abrirá el formulario institucional de actualización de datos.');
 }
-document.getElementById('dni').addEventListener('keydown',function(e){if(e.key==='Enter')consultar()});
+
+document.getElementById('dni').addEventListener('keydown',function(e){
+  if(e.key==='Enter') consultar();
+});
 </script>
 </body>
 </html>
