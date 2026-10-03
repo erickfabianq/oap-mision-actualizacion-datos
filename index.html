@@ -27,7 +27,7 @@ button{width:100%;border:0;border-radius:11px;padding:14px;margin-top:12px;font-
 <header>
 <div class="brand">OFICINA DE ADMISIÓN Y PERMANENCIA ESTUDIANTIL - OAP</div>
 <h1>Tu misión:<br>Actualizar tus datos</h1>
-<div class="sub">Consulta con tu DNI si ya cumpliste la misión.</div>
+<div class="sub">Consulta con tu documento si ya cumpliste la misión.</div>
 </header>
 <main>
 <div class="card mission">
@@ -37,8 +37,8 @@ button{width:100%;border:0;border-radius:11px;padding:14px;margin-top:12px;font-
 </div>
 
 <div class="card">
-<label for="dni">DNI</label>
-<input id="dni" inputmode="numeric" maxlength="8" placeholder="Ingresa tu DNI" autocomplete="off">
+<label for="dni">Documento de identidad</label>
+<input id="dni" type="text" inputmode="text" maxlength="18" placeholder="Ingresa tu documento" autocomplete="off">
 <button class="primary" onclick="consultar()">Consultar mi misión</button>
 
 <div id="ok" class="result ok">
@@ -59,8 +59,8 @@ button{width:100%;border:0;border-radius:11px;padding:14px;margin-top:12px;font-
 
 <div id="error" class="result error">
 <div class="icon">🔎</div>
-<h2>Revisa tu DNI</h2>
-<p>Ingresa un DNI válido de 8 dígitos para consultar tu misión.</p>
+<h2>Revisa tu documento</h2>
+<p>Verifica el número o código de tu documento de identidad e inténtalo nuevamente.</p>
 </div>
 </div>
 
@@ -75,19 +75,23 @@ const FORMULARIO_URL = "https://forms.cloud.microsoft/pages/responsepage.aspx?id
 
 async function consultar(){
   ocultar();
-  const dni = document.getElementById('dni').value.trim();
-  if(!/^\d{8}$/.test(dni)){
+  const documento = document.getElementById('dni').value.trim().toUpperCase();
+
+  if(!/^[A-Z0-9]{1,18}$/.test(documento)){
     document.getElementById('error').style.display='block';
     return;
   }
+
   try {
     const respuesta = await fetch('estado.json');
     const estados = await respuesta.json();
-    if(estados[dni] === "COMPLETADO"){
+
+    if(estados[documento] === "COMPLETADO"){
       document.getElementById('ok').style.display='block';
     } else {
       document.getElementById('pending').style.display='block';
     }
+
   } catch(error) {
     console.error(error);
     document.getElementById('error').style.display='block';
@@ -106,6 +110,10 @@ function abrirFormulario(){
   else
     alert('Aquí se abrirá el formulario institucional de actualización de datos.');
 }
+
+document.getElementById('dni').addEventListener('input',function(){
+  this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+});
 
 document.getElementById('dni').addEventListener('keydown',function(e){
   if(e.key==='Enter') consultar();
