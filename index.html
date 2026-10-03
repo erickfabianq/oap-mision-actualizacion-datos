@@ -26,8 +26,8 @@ button{width:100%;border:0;border-radius:11px;padding:14px;margin-top:12px;font-
 <div class="wrap">
 <header>
 <div class="brand">OFICINA DE ADMISIÓN Y PERMANENCIA ESTUDIANTIL - OAP</div>
-<h1>Tu misión: actualizar tus datos</h1>
-<div class="sub">Consulta con tu DNI si ya cumpliste la misión de <strong>Actualización de datos 2026-2</strong>.</div>
+<h1>Tu misión:<br>Actualizar tus datos</h1>
+<div class="sub">Consulta con tu DNI si ya cumpliste la misión.</div>
 </header>
 <main>
 <div class="card mission">
@@ -40,7 +40,6 @@ button{width:100%;border:0;border-radius:11px;padding:14px;margin-top:12px;font-
 <label for="dni">DNI</label>
 <input id="dni" inputmode="numeric" maxlength="8" placeholder="Ingresa tu DNI" autocomplete="off">
 <button class="primary" onclick="consultar()">Consultar mi misión</button>
-
 
 <div id="ok" class="result ok">
 <div class="icon">✅</div>
@@ -66,8 +65,7 @@ button{width:100%;border:0;border-radius:11px;padding:14px;margin-top:12px;font-
 </div>
 
 <div class="card next">
-<strong>🎯 Próxima misión</strong><br>
-Estate atento(a), muy pronto publicaremos nuevas "misiones".
+<strong>🎯 Próxima misión:</strong> Permanece atento(a), muy pronto publicaremos nuevas <strong>misiones</strong>.
 </div>
 </main>
 <div class="footer">Versión de prueba. Elaborado por OAP - UARM.</div>
@@ -75,27 +73,21 @@ Estate atento(a), muy pronto publicaremos nuevas "misiones".
 <script>
 const FORMULARIO_URL = "https://forms.cloud.microsoft/pages/responsepage.aspx?id=FGQfMFapPUaJwVUXV2j4vYJwpOzJxkRMgVGbTI2uH-ZUQlRYNjVHMEIzMkQwT0dCM1YyNTlJQTAwTS4u&route=shorturl";
 
-// Consulta la lista de DNI registrados en estado.json
 async function consultar(){
   ocultar();
-
   const dni = document.getElementById('dni').value.trim();
-
   if(!/^\d{8}$/.test(dni)){
     document.getElementById('error').style.display='block';
     return;
   }
-
   try {
     const respuesta = await fetch('estado.json');
     const estados = await respuesta.json();
-
     if(estados[dni] === "COMPLETADO"){
       document.getElementById('ok').style.display='block';
     } else {
       document.getElementById('pending').style.display='block';
     }
-
   } catch(error) {
     console.error(error);
     document.getElementById('error').style.display='block';
