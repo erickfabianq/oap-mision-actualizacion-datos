@@ -19,7 +19,15 @@ button{width:100%;border:0;border-radius:11px;padding:14px;margin-top:12px;font-
 .ok{background:#dff4e4;border:1px solid #8dcc99}.pending{background:#fff1c7;border:1px solid #e2bd52}.error{background:#fff0f0;border:1px solid #e5bcbc}
 .icon{font-size:34px}.result h2{font-size:19px;margin:7px 0}.result p{font-size:14px;line-height:1.5;margin:7px 0;color:#46545b}.result .big{font-size:15px;font-weight:700;color:#263238}
 .pill{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:700;background:white;margin-top:7px}
-.next{font-size:13px;line-height:1.5;color:#66737b}.next strong{color:#263238}.footer{text-align:center;font-size:11px;color:#879197;padding:5px 22px 28px}
+.next{font-size:13px;line-height:1.5;color:#66737b}.next strong{color:#263238}
+.progress{font-size:13px;line-height:1.5;color:#66737b}
+.progress h2{font-size:18px;margin:0 0 6px;color:#263238}
+.progress-intro{margin:0 0 14px}
+.progress-bar{height:18px;border-radius:999px;overflow:hidden;background:#fff1c7;border:1px solid #e2bd52;display:flex}
+.progress-done{height:100%;background:#8dcc99;transition:width .3s ease}
+.progress-legend{display:flex;justify-content:space-between;gap:10px;margin-top:10px;font-size:12px;font-weight:700}
+.progress-note{font-size:10px;color:#879197;margin:10px 0 0;line-height:1.4}
+.footer{text-align:center;font-size:11px;color:#879197;padding:5px 22px 28px}
 </style>
 </head>
 <body>
@@ -67,11 +75,25 @@ button{width:100%;border:0;border-radius:11px;padding:14px;margin-top:12px;font-
 <div class="card next">
 <strong>🎯 Próxima misión:</strong> Permanece atento(a), muy pronto publicaremos nuevas misiones.
 </div>
+
+<div class="card progress">
+<h2>📊 ¿Cómo va la actualización de datos este semestre?</h2>
+<p class="progress-intro">Mira cómo avanzamos entre todos.</p>
+<div class="progress-bar" aria-label="Avance aproximado de la actualización de datos">
+<div id="progressDone" class="progress-done"></div>
+</div>
+<div class="progress-legend">
+<span id="progressCompleted">🟩 Completado — 0 %</span>
+<span id="progressPending">🟨 Pendiente — 100 %</span>
+</div>
+<p class="progress-note">Porcentaje referencial según los registros disponibles. Se cuentan documentos únicos.</p>
+</div>
 </main>
 <div class="footer">Versión de prueba. Elaborado por OAP - UARM.</div>
 </div>
 <script>
 const FORMULARIO_URL = "https://forms.cloud.microsoft/pages/responsepage.aspx?id=FGQfMFapPUaJwVUXV2j4vYJwpOzJxkRMgVGbTI2uH-ZUQlRYNjVHMEIzMkQwT0dCM1YyNTlJQTAwTS4u&route=shorturl";
+const TOTAL_ESTUDIANTES = 3033;
 
 async function consultar(){
   ocultar();
@@ -98,6 +120,27 @@ async function consultar(){
   }
 }
 
+function actualizarAvance(estados){
+  const documentosUnicos = new Set();
+
+  Object.keys(estados).forEach(documento => {
+    const normalizado = String(documento).trim().toUpperCase();
+    if(/^[A-Z0-9]{1,18}$/.test(normalizado) && estados[documento] === "COMPLETADO"){
+      documentosUnicos.add(normalizado);
+    }
+  });
+
+  const completados = documentosUnicos.size;
+  const porcentajeCompletado = Math.min(100, (completados / TOTAL_ESTUDIANTES) * 100);
+  const porcentajePendiente = Math.max(0, 100 - porcentajeCompletado);
+
+  document.getElementById('progressDone').style.width = porcentajeCompletado + '%';
+  document.getElementById('progressCompleted').textContent =
+    '🟩 Completado — ' + porcentajeCompletado.toFixed(1) + ' %';
+  document.getElementById('progressPending').textContent =
+    '🟨 Pendiente — ' + porcentajePendiente.toFixed(1) + ' %';
+}
+
 function ocultar(){
   ['ok','pending','error'].forEach(id =>
     document.getElementById(id).style.display='none'
@@ -118,6 +161,11 @@ document.getElementById('dni').addEventListener('input',function(){
 document.getElementById('dni').addEventListener('keydown',function(e){
   if(e.key==='Enter') consultar();
 });
+
+fetch('estado.json')
+  .then(respuesta => respuesta.json())
+  .then(estados => actualizarAvance(estados))
+  .catch(error => console.error('No se pudo cargar el avance:', error));
 </script>
 </body>
 </html>
