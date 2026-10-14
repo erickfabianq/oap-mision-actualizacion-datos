@@ -27,6 +27,13 @@ button{width:100%;border:0;border-radius:11px;padding:14px;margin-top:12px;font-
 .progress-done{height:100%;background:#8dcc99;transition:width .3s ease}
 .progress-legend{display:flex;justify-content:space-between;gap:10px;margin-top:10px;font-size:12px;font-weight:700}
 .progress-note{font-size:10px;color:#879197;margin:10px 0 0;line-height:1.4}
+
+.like-card{text-align:center}
+.like-heart{font-size:32px;line-height:1;margin-bottom:8px}
+.like-card h2{font-size:18px;margin:0 0 8px}
+.like-card .like-note{font-size:12px;line-height:1.5;color:#66737b;margin:10px 0 0}
+.like-button{background:#263238;color:#fff;max-width:220px;margin:8px auto 0;display:block}
+.like-button:disabled{background:#eef1f3;color:#46545b;cursor:default}
 .footer{text-align:center;font-size:11px;color:#263238;padding:5px 22px 28px}
 </style>
 </head>
@@ -87,6 +94,14 @@ button{width:100%;border:0;border-radius:11px;padding:14px;margin-top:12px;font-
 <span id="progressPending">🟨 Pendiente — 100 %</span>
 </div>
 <p class="progress-note">Porcentaje referencial según los registros disponibles.</p>
+</div>
+
+<div class="card like-card">
+<div class="like-heart" aria-hidden="true">❤️</div>
+<h2>¿Te gustó esta misión?</h2>
+<p style="font-size:14px;margin:0 0 4px">¡Déjanos un Me gusta!</p>
+<button id="likeButton" class="like-button" type="button" onclick="darMeGusta()">👍 Me gusta</button>
+<p class="like-note">Tu opinión nos ayuda a mejorar nuestras iniciativas.</p>
 </div>
 </main>
 <div class="footer">Elaborado por OAP - UARM.</div>
@@ -155,6 +170,26 @@ document.getElementById('dni').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') consultar();
 });
 consultarServicio({accion:'avance'}).then(actualizarAvance).catch(error => console.error('No se pudo cargar el avance:', error));
+
+// El voto se recuerda solo en este navegador; no se envían datos personales.
+const LIKE_STORAGE_KEY = 'oap_mision1_me_gusta_v1';
+function actualizarBotonMeGusta() {
+  const boton = document.getElementById('likeButton');
+  let votado = false;
+  try { votado = localStorage.getItem(LIKE_STORAGE_KEY) === '1'; } catch (e) {}
+  if (votado) {
+    boton.disabled = true;
+    boton.textContent = '❤️ ¡Gracias por tu apoyo!';
+  }
+}
+function darMeGusta() {
+  const boton = document.getElementById('likeButton');
+  if (boton.disabled) return;
+  try { localStorage.setItem(LIKE_STORAGE_KEY, '1'); } catch (e) {}
+  boton.disabled = true;
+  boton.textContent = '❤️ ¡Gracias por tu apoyo!';
+}
+actualizarBotonMeGusta();
 </script>
 </body>
 </html>
