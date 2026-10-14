@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OAP | Misión: Actualización de datos 2026-2</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#D95F55;font-family:Arial,sans-serif;color:#263238}
+.wrap{max-width:430px;margin:auto;min-height:100vh;background:#E98276;box-shadow:0 0 30px rgba(0,0,0,.06)}
+header{padding:25px 22px 20px;border-bottom:1px solid #e5e7eb}
+.brand{font-size:11px;font-weight:700;color:#fff;letter-spacing:.5px;line-height:1.35}
+h1{font-size:27px;line-height:1.12;margin:10px 0 8px}.sub{font-size:14px;line-height:1.5;color:#fff}
+main{padding:20px}.card{border:1px solid #e1e6e9;border-radius:17px;padding:19px;margin-bottom:16px;background:#fff}
+.mission{background:#fafbfc;text-align:center}.mission .rocket{font-size:42px;margin-bottom:5px}.mission h2{font-size:19px;margin:4px 0 7px}.mission p{font-size:14px;line-height:1.45;color:#66737b;margin:0}
+label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
+input{width:100%;padding:14px;border:1px solid #cfd6da;border-radius:11px;font-size:17px;outline:none}input:focus{border-color:#68777f;box-shadow:0 0 0 3px #eef1f3}
+button{width:100%;border:0;border-radius:11px;padding:14px;margin-top:12px;font-size:15px;font-weight:700;cursor:pointer}.primary{background:#263238;color:white}.secondary{background:#eef1f3;color:#263238}
+.hint{font-size:11px;color:#7a858c;margin-top:8px}.result{display:none;border-radius:15px;padding:18px;margin-top:16px}
+.ok{background:#dff4e4;border:1px solid #8dcc99}.pending{background:#fff1c7;border:1px solid #e2bd52}.error{background:#fff0f0;border:1px solid #e5bcbc}
+.icon{font-size:34px}.result h2{font-size:19px;margin:7px 0}.result p{font-size:14px;line-height:1.5;margin:7px 0;color:#46545b}.result .big{font-size:15px;font-weight:700;color:#263238}
+.pill{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:700;background:white;margin-top:7px}
+.next{font-size:13px;line-height:1.5;color:#66737b}.next strong{color:#263238}
+.progress{font-size:13px;line-height:1.5;color:#66737b}
+.progress h2{font-size:18px;margin:0 0 6px;color:#263238}
+.progress-intro{margin:0 0 14px}
+.progress-bar{height:18px;border-radius:999px;overflow:hidden;background:#fff1c7;border:1px solid #e2bd52;display:flex}
+.progress-done{height:100%;background:#8dcc99;transition:width .3s ease}
+.progress-legend{display:flex;justify-content:space-between;gap:10px;margin-top:10px;font-size:12px;font-weight:700}
+.progress-note{font-size:10px;color:#879197;margin:10px 0 0;line-height:1.4}
+.footer{text-align:center;font-size:11px;color:#263238;padding:5px 22px 28px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="brand">OFICINA DE ADMISIÓN Y PERMANENCIA ESTUDIANTIL - OAP</div>
+<h1>Tu misión:<br>Actualizar tus datos</h1>
+<div class="sub">Consulta con tu documento si ya cumpliste la misión.</div>
+</header>
+<main>
+<div class="card mission">
+<div class="rocket">🚀</div>
+<h2>Una misión sencilla, pero importante</h2>
+<p>Tu información nos ayudará a acompañarte mejor durante tu trayectoria universitaria.</p>
+</div>
+
+<div class="card">
+<label for="dni">Documento de identidad</label>
+<input id="dni" type="text" inputmode="text" maxlength="18" placeholder="Ingresa tu documento" autocomplete="off">
+<button class="primary" onclick="consultar()">Consultar mi misión</button>
+
+<div id="ok" class="result ok">
+<div class="icon">✅</div>
+<h2>¡Misión cumplida!</h2>
+<p class="big">Tus datos 2026-2 ya están actualizados.</p>
+<p>Gracias por completar esta misión. Con tu respuesta podemos conocerte mejor y acompañarte durante tu trayectoria universitaria.</p>
+<span class="pill">✓ MISIÓN CUMPLIDA</span>
+</div>
+
+<div id="pending" class="result pending">
+<div class="icon">📝</div>
+<h2>Tienes una misión pendiente</h2>
+<p>Nos falta registrar tu actualización de datos. Puedes completar el formulario ahora; te tomará solo unos minutos.</p>
+<button class="primary" onclick="abrirFormulario()">Actualizar ahora</button>
+<span class="pill">MISIÓN PENDIENTE</span>
+</div>
+
+<div id="error" class="result error">
+<div class="icon">🔎</div>
+<h2>Revisa tu documento</h2>
+<p>Verifica el número o código de tu documento de identidad e inténtalo nuevamente.</p>
+</div>
+</div>
+
+<div class="card next">
+<strong>🎯 Próxima misión:</strong> Permanece atento(a), muy pronto publicaremos nuevas misiones.
+</div>
+
+<div class="card progress">
+<h2>📊 ¿Cómo va la actualización de datos este semestre?</h2>
+<p class="progress-intro">Mira cómo avanzamos entre todos.</p>
+<div class="progress-bar" aria-label="Avance aproximado de la actualización de datos">
+<div id="progressDone" class="progress-done"></div>
+</div>
+<div class="progress-legend">
+<span id="progressCompleted">🟩 Completado — 0 %</span>
+<span id="progressPending">🟨 Pendiente — 100 %</span>
+</div>
+<p class="progress-note">Porcentaje referencial según los registros disponibles.</p>
+</div>
+</main>
+<div class="footer">Elaborado por OAP - UARM.</div>
+</div>
+<script>
+const FORMULARIO_URL = "https://forms.cloud.microsoft/pages/responsepage.aspx?id=FGQfMFapPUaJwVUXV2j4vYJwpOzJxkRMgVGbTI2uH-ZUQlRYNjVHMEIzMkQwT0dCM1YyNTlJQTAwTS4u&route=shorturl";
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxcfDYELYAsdIQyNJbhfCjY55JwccF0W11fJ6PHd9Jq06nmJ7_r5Oh_hI732ixUqpU40Q/exec';
+let contadorConsultas = 0;
+function consultarServicio(parametros) {
+  return new Promise((resolve, reject) => {
+    const callback = 'oapCallback_' + (++contadorConsultas);
+    const script = document.createElement('script');
+    let terminado = false;
+    const timeout = setTimeout(() => finalizar(new Error('Tiempo de espera agotado')), 12000);
+    function finalizar(error, datos) {
+      if (terminado) return;
+      terminado = true;
+      clearTimeout(timeout);
+      delete window[callback];
+      script.remove();
+      if (error) reject(error); else resolve(datos);
+    }
+    window[callback] = datos => finalizar(null, datos);
+    script.onerror = () => finalizar(new Error('No se pudo consultar Apps Script'));
+    const url = new URL(APPS_SCRIPT_URL);
+    Object.entries(parametros).forEach(([clave, valor]) => url.searchParams.set(clave, valor));
+    url.searchParams.set('callback', callback);
+    script.src = url.toString();
+    document.head.appendChild(script);
+  });
+}
+async function consultar() {
+  ocultar();
+  const documento = document.getElementById('dni').value.trim().toUpperCase();
+  if (!/^[A-Z0-9]{1,18}$/.test(documento)) {
+    document.getElementById('error').style.display = 'block';
+    return;
+  }
+  try {
+    const respuesta = await consultarServicio({documento});
+    if (respuesta.estado === 'COMPLETADO') document.getElementById('ok').style.display = 'block';
+    else if (respuesta.estado === 'PENDIENTE') document.getElementById('pending').style.display = 'block';
+    else throw new Error('Respuesta de consulta no válida');
+  } catch (error) {
+    console.error(error);
+    document.getElementById('error').style.display = 'block';
+  }
+}
+function actualizarAvance(datos) {
+  const completados = Number(datos.completados);
+  const total = Number(datos.total);
+  if (!Number.isFinite(completados) || !Number.isFinite(total) || total <= 0) return;
+  const porcentaje = Math.max(0, Math.min(100, completados / total * 100));
+  document.getElementById('progressDone').style.width = porcentaje + '%';
+  document.getElementById('progressCompleted').textContent = '🟩 Completado — ' + porcentaje.toFixed(1) + ' %';
+  document.getElementById('progressPending').textContent = '🟨 Pendiente — ' + (100 - porcentaje).toFixed(1) + ' %';
+}
+function ocultar() {
+  ['ok','pending','error'].forEach(id => document.getElementById(id).style.display = 'none');
+}
+function abrirFormulario() { window.open(FORMULARIO_URL, '_blank', 'noopener,noreferrer'); }
+document.getElementById('dni').addEventListener('input', function() {
+  this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+});
+document.getElementById('dni').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') consultar();
+});
+consultarServicio({accion:'avance'}).then(actualizarAvance).catch(error => console.error('No se pudo cargar el avance:', error));
+</script>
+</body>
+</html>
