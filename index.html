@@ -28,11 +28,10 @@ button{width:100%;border:0;border-radius:11px;padding:14px;margin-top:12px;font-
 .progress-legend{display:flex;justify-content:space-between;gap:10px;margin-top:10px;font-size:12px;font-weight:700}
 .progress-note{font-size:10px;color:#879197;margin:10px 0 0;line-height:1.4}
 
-.like-card{text-align:center}
-.like-heart{font-size:32px;line-height:1;margin-bottom:8px}
-.like-card h2{font-size:18px;margin:0 0 8px}
-.like-card .like-note{font-size:12px;line-height:1.5;color:#66737b;margin:10px 0 0}
-.like-button{background:#263238;color:#fff;max-width:220px;margin:8px auto 0;display:block}
+.like-strip{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:5px 2px 12px;margin:0 0 10px;border-bottom:1px solid rgba(38,50,56,.18)}
+.like-copy{font-size:12px;line-height:1.4;color:#46545b}
+.like-copy strong{display:block;font-size:13px;color:#263238;font-weight:700;margin-bottom:2px}
+.like-button{flex:0 0 auto;width:auto;min-width:104px;padding:8px 12px;margin:0;border:1px solid rgba(38,50,56,.18);border-radius:999px;background:#fff;color:#263238;font-size:12px;font-weight:700}
 .like-button:disabled{background:#eef1f3;color:#46545b;cursor:default}
 .footer{text-align:center;font-size:11px;color:#263238;padding:5px 22px 28px}
 </style>
@@ -96,12 +95,12 @@ button{width:100%;border:0;border-radius:11px;padding:14px;margin-top:12px;font-
 <p class="progress-note">Porcentaje referencial según los registros disponibles.</p>
 </div>
 
-<div class="card like-card">
-<div class="like-heart" aria-hidden="true">❤️</div>
-<h2>¿Te gustó esta misión?</h2>
-<p style="font-size:14px;margin:0 0 4px">¡Déjanos un Me gusta!</p>
-<button id="likeButton" class="like-button" type="button" onclick="darMeGusta()">👍 Me gusta</button>
-<p class="like-note">Tu opinión nos ayuda a mejorar nuestras iniciativas.</p>
+<div class="like-strip" aria-label="Opinión sobre la aplicación">
+<div class="like-copy">
+<strong>¿Te gustó esta aplicación?</strong>
+Tu opinión nos ayuda a mejorar.
+</div>
+<button id="likeButton" class="like-button" type="button" onclick="darMeGusta()">♡ Me gustó</button>
 </div>
 </main>
 <div class="footer">Elaborado por OAP - UARM.</div>
