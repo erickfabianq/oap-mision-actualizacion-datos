@@ -170,8 +170,8 @@ document.getElementById('dni').addEventListener('keydown', function(e) {
 });
 consultarServicio({accion:'avance'}).then(actualizarAvance).catch(error => console.error('No se pudo cargar el avance:', error));
 
-// El voto se recuerda solo en este navegador; no se envían datos personales.
-const LIKE_STORAGE_KEY = 'oap_mision1_me_gusta_v1';
+// El voto se registra en la hoja VOTO. El navegador recuerda el envío exitoso.
+const LIKE_STORAGE_KEY = 'oap_mision1_me_gusta_v2';
 function actualizarBotonMeGusta() {
   const boton = document.getElementById('likeButton');
   let votado = false;
@@ -181,12 +181,24 @@ function actualizarBotonMeGusta() {
     boton.textContent = '❤️ ¡Gracias por tu apoyo!';
   }
 }
-function darMeGusta() {
+async function darMeGusta() {
   const boton = document.getElementById('likeButton');
   if (boton.disabled) return;
-  try { localStorage.setItem(LIKE_STORAGE_KEY, '1'); } catch (e) {}
   boton.disabled = true;
-  boton.textContent = '❤️ ¡Gracias por tu apoyo!';
+  boton.textContent = 'Registrando…';
+  try {
+    const respuesta = await consultarServicio({accion: 'votar'});
+    if (!respuesta || respuesta.estado !== 'REGISTRADO') {
+      throw new Error('Apps Script no confirmó el registro del voto');
+    }
+    try { localStorage.setItem(LIKE_STORAGE_KEY, '1'); } catch (e) {}
+    boton.textContent = '❤️ ¡Gracias por tu apoyo!';
+  } catch (error) {
+    console.error('No se pudo registrar el voto:', error);
+    boton.disabled = false;
+    boton.textContent = '↻ Reintentar voto';
+    boton.title = 'No se pudo registrar el voto. Pulsa para volver a intentarlo.';
+  }
 }
 actualizarBotonMeGusta();
 </script>
